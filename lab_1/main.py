@@ -60,6 +60,26 @@ def generate_first_order_model(text, rows, chars_per_row, char_frequency):
     return generated_text
 
 
+def calculate_bigram_probabilities(text, sample_size=1200):
+    # Wybierz losową próbkę tekstu
+    sample_text = random.sample(text, min(len(text), sample_size))
+
+    # Oblicz wystąpienia poszczególnych znaków
+    char_counts = Counter(sample_text)
+
+    # Oblicz wystąpienia bigramów
+    bigram_counts = Counter(zip(sample_text, sample_text[1:]))
+
+    # Oblicz prawdopodobieństwa warunkowe
+    bigram_probabilities = {}
+    for bigram, count in bigram_counts.items():
+        char1, char2 = bigram
+        probability = count / char_counts[char1]
+        bigram_probabilities[bigram] = probability
+
+    return bigram_probabilities
+
+
 if __name__ == '__main__':
     text = read_file("norm_hamlet.txt")
     # Wygenerowanie przybliżenia zerowego rzędu
@@ -81,3 +101,13 @@ if __name__ == '__main__':
     print("Wygenerowany tekst (przybliżenie pierwszego rzędu):")
     print(generated_text_first_order)
     print("Średnia długość słowa (przybliżenie pierwszego rzędu):", avg_length_first_order)
+
+    # Oblicz prawdopodobieństwa bigramów
+    bigram_probabilities = calculate_bigram_probabilities(text)
+
+    # Wyświetl obliczone prawdopodobieństwa
+    print("Prawdopodobieństwa wystąpienia znaków po każdym z drugiego najczęściej występującego znaku:")
+    sorted_bigram_probabilities = dict(sorted(bigram_probabilities.items(), key=lambda item: item[1], reverse=True))
+    for bigram, probability in sorted_bigram_probabilities.items():
+        char1, char2 = bigram
+        print(f"P({char2}|{char1}) = {probability}")
