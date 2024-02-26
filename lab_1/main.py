@@ -35,6 +35,31 @@ def calculate_character_frequency(text, sample_size=1200):
     sorted_char_frequency = dict(sorted(char_frequency.items(), key=lambda item: item[1], reverse=True))
 
     return sorted_char_frequency
+
+
+def generate_first_order_model(text, rows, chars_per_row, char_frequency):
+    # Tworzymy kumulatywną dystrybuantę prawdopodobieństwa
+    cumulative_frequency = {}
+    cumulative_sum = 0
+    for char, count in char_frequency.items():
+        cumulative_sum += count
+        cumulative_frequency[char] = cumulative_sum
+
+    # Generujemy tekst w odpowiednich wierszach i kolumnach
+    generated_text = ''
+    for _ in range(rows):
+        row = ''
+        for _ in range(chars_per_row):
+            random_index = random.randint(0, cumulative_sum - 1)
+            for char, cumulative_count in cumulative_frequency.items():
+                if random_index < cumulative_count:
+                    row += char
+                    break
+        generated_text += row + '\n'
+
+    return generated_text
+
+
 if __name__ == '__main__':
     text = read_file("norm_hamlet.txt")
     # Wygenerowanie przybliżenia zerowego rzędu
@@ -49,3 +74,10 @@ if __name__ == '__main__':
     print("Częstość występowania poszczególnych znaków:")
     for char, count in char_frequency.items():
         print(f"{char}: {count}")
+
+    generated_text_first_order = generate_first_order_model(text, 48, 25, char_frequency)
+    avg_length_first_order = average_word_length(generated_text_first_order)
+
+    print("Wygenerowany tekst (przybliżenie pierwszego rzędu):")
+    print(generated_text_first_order)
+    print("Średnia długość słowa (przybliżenie pierwszego rzędu):", avg_length_first_order)
