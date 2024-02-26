@@ -1,5 +1,5 @@
 import random
-
+from collections import Counter
 
 def read_file(file_name):
     with open(file_name, 'r', encoding='utf-8') as file:
@@ -24,6 +24,17 @@ def average_word_length(text):
     return total_length / num_words
 
 
+def calculate_character_frequency(text, sample_size=1200):
+    # Wybierz losową próbkę tekstu
+    sample_text = random.sample(text, min(len(text), sample_size))
+
+    # Utwórz słownik częstości znaków
+    char_frequency = Counter(sample_text)
+
+    # Uporządkuj znaki według częstości występowania
+    sorted_char_frequency = dict(sorted(char_frequency.items(), key=lambda item: item[1], reverse=True))
+
+    return sorted_char_frequency
 if __name__ == '__main__':
     text = read_file("norm_hamlet.txt")
     # Wygenerowanie przybliżenia zerowego rzędu
@@ -33,3 +44,8 @@ if __name__ == '__main__':
     print("Wygenerowany tekst:")
     print(generated_text)
     print("Średnia długość słowa:", avg_length)
+    char_frequency = calculate_character_frequency(text, sample_size=1200)
+
+    print("Częstość występowania poszczególnych znaków:")
+    for char, count in char_frequency.items():
+        print(f"{char}: {count}")
