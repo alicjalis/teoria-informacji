@@ -1,2 +1,2 @@
-# teoria_informacji
-Zadania z laboratoriów na przedmiot Teoria Informacji i Metody Kompresji Danych
+# Teoria informacji i metody kompresji danych
+Zadania z laboratoriów na przedmiot teoria tnformacji i metody kompresji danych
