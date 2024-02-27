@@ -86,15 +86,18 @@ if __name__ == '__main__':
     generated_text = zeroth_order_model(text, 48, 25)
     avg_length = average_word_length(generated_text)
 
+    #Zad 1
     print("Wygenerowany tekst:")
     print(generated_text)
     print("Średnia długość słowa:", avg_length)
     char_frequency = calculate_character_frequency(text, sample_size=1200)
 
+    #Zad 2
     print("Częstość występowania poszczególnych znaków:")
     for char, count in char_frequency.items():
         print(f"{char}: {count}")
 
+    #Zad 3
     generated_text_first_order = generate_first_order_model(text, 48, 25, char_frequency)
     avg_length_first_order = average_word_length(generated_text_first_order)
 
@@ -102,10 +105,11 @@ if __name__ == '__main__':
     print(generated_text_first_order)
     print("Średnia długość słowa (przybliżenie pierwszego rzędu):", avg_length_first_order)
 
-    # Oblicz prawdopodobieństwa bigramów
+    #Zad 4
+    #Obliczenie prawdopodobieństw bigramów
     bigram_probabilities = calculate_bigram_probabilities(text)
 
-    # Wyświetl obliczone prawdopodobieństwa
+
     print("Prawdopodobieństwa wystąpienia znaków po każdym z drugiego najczęściej występującego znaku:")
     sorted_bigram_probabilities = dict(sorted(bigram_probabilities.items(), key=lambda item: item[1], reverse=True))
     for bigram, probability in sorted_bigram_probabilities.items():
