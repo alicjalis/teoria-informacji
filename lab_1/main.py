@@ -79,6 +79,46 @@ def calculate_bigram_probabilities(text, sample_size=1200):
 
     return bigram_probabilities
 
+import random
+
+
+def generate_first_order_markov_model(text, seed, length, sample_size=1200):
+    # Wybierz losową próbkę tekstu
+    sample_text = random.sample(text, min(len(text), sample_size))
+
+    # Inicjalizacja zmiennej przechowującej wygenerowany tekst
+    generated_text = seed
+
+    # Zbuduj model Markova pierwszego rzędu
+    markov_model = {}
+    for i in range(len(sample_text) - 1):
+        if sample_text[i] not in markov_model:
+            markov_model[sample_text[i]] = {}
+        if sample_text[i + 1] not in markov_model[sample_text[i]]:
+            markov_model[sample_text[i]][sample_text[i + 1]] = 1
+        else:
+            markov_model[sample_text[i]][sample_text[i + 1]] += 1
+
+    # Generowanie tekstu na podstawie modelu Markova
+    current_state = seed
+    for _ in range(length):
+        if current_state not in markov_model:
+            break
+        next_state = \
+        random.choices(list(markov_model[current_state].keys()), weights=markov_model[current_state].values(), k=1)[0]
+        generated_text += next_state
+        current_state = next_state
+
+    # Formatowanie wygenerowanego tekstu w 48 wierszach po 25 znaków w każdym wierszu
+    formatted_text = ""
+    for i in range(0, len(generated_text), 25):
+        formatted_text += generated_text[i:i + 25] + "\n"
+
+    return formatted_text
+
+
+
+
 
 if __name__ == '__main__':
     text = read_file("norm_hamlet.txt")
@@ -115,3 +155,8 @@ if __name__ == '__main__':
     for bigram, probability in sorted_bigram_probabilities.items():
         char1, char2 = bigram
         print(f"P({char2}|{char1}) = {probability}")
+
+    #Zad 5.1
+    generated_text_first_order = generate_first_order_markov_model(text, 'a', 1200)
+    print("Wygenerowany tekst (źródło Markova pierwszego rzędu):")
+    print(generated_text_first_order)
