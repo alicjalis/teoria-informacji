@@ -103,7 +103,6 @@ def generate_text(markov_chain, order, starting_sequence='', length=1000):
 
 if __name__ == '__main__':
     text = read_file("norm_hamlet.txt")
-    # Wygenerowanie przybliżenia zerowego rzędu
     generated_text = zeroth_order_model(text, 48, 25)
     avg_length = average_word_length(generated_text)
 
