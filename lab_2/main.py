@@ -12,8 +12,12 @@ def build_markov_chain(text, order=1):
             markov_chain[current_words] = [next_word]
     return markov_chain
 
-def generate_text(markov_chain, order = 1, length=1000):
-    current_words = random.choice(list(markov_chain.keys()))
+def generate_text(markov_chain, order = 1, length=1000, starting_sequence=None):
+    if starting_sequence == None:
+        current_words = random.choice(list(markov_chain.keys()))
+    else:
+        starting_sequence = starting_sequence.split()
+        current_words = tuple(starting_sequence)
     generated_text = ' '.join(current_words)
     word_count = order
     for _ in range(length):
@@ -36,15 +40,19 @@ def read_random_sample(file_name, sample_size=1000):
         text = text[start_index:start_index + sample_size]
     return text
 
-sample_text = read_random_sample("norm_hamlet.txt", 1200)
+sample_text = read_random_sample("norm_wiki_sample.txt", 1200)
 markov_chain_first_order = build_markov_chain(sample_text)
 text_first_order = generate_text(markov_chain_first_order)
 
 markov_chain_second_order = build_markov_chain(sample_text, 2)
 text_second_order = generate_text(markov_chain_second_order, 2)
+markov_chain_starting_sequence = build_markov_chain(sample_text, 2)
+text_with_sequence = generate_text(markov_chain_starting_sequence, 2, 1000, "probability that")
+print(markov_chain_first_order)
+print(markov_chain_second_order)
 print("First order \n")
 print(text_first_order + "\n")
 print("Second order \n")
 print(text_second_order + "\n")
-
+print(text_with_sequence)
 
